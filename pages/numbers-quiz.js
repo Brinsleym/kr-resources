@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import Link from 'next/link';
@@ -25,9 +25,9 @@ export default function NumbersQuizPage() {
   const [feedback, setFeedback] = useState(null);
   const [isRevealed, setIsRevealed] = useState(false);
 
-  const specialSinoNumbers = [1000, 10000, 100000, 1000000000];
-  const nativeUnits = ['', '하나', '둘', '셋', '넷', '다섯', '여섯', '일곱', '여덟', '아홉'];
-  const nativeTens = ['', '열', '스물', '서른', '마흔', '쉰', '예순', '일흔', '여든', '아흔'];
+  const specialSinoNumbers = useMemo(() => [1000, 10000, 100000, 1000000000], []);
+  const nativeUnits = useMemo(() => ['', '하나', '둘', '셋', '넷', '다섯', '여섯', '일곱', '여덟', '아홉'], []);
+  const nativeTens = useMemo(() => ['', '열', '스물', '서른', '마흔', '쉰', '예순', '일흔', '여든', '아흔'], []);
 
   function sinoChunk(numStr) {
     let result = '';
@@ -45,7 +45,7 @@ export default function NumbersQuizPage() {
     return result;
   }
 
-  function toSinoKorean(num) {
+  const toSinoKorean = useCallback((num) => {
     if (num === 0) return '영';
     let numStr = String(num);
     let result = '';
@@ -68,9 +68,9 @@ export default function NumbersQuizPage() {
         unitIndex++;
     }
     return result;
-  }
+  }, []);
 
-  function toNativeKorean(num) {
+  const toNativeKorean = useCallback((num) => {
     if (num === 0) return '영';
     if (num > 99) return 'Too large for native Korean!';
     if (num < 1 || num > 99) return 'Out of range for native Korean!';
@@ -84,8 +84,8 @@ export default function NumbersQuizPage() {
         result += nativeUnits[units];
     }
     return result;
-  }
-
+  }, [nativeTens, nativeUnits]);
+  
   const generateQuestion = useCallback(() => {
     setUserAnswer('');
     setFeedback(null);
@@ -113,7 +113,7 @@ export default function NumbersQuizPage() {
         setCurrentNumber(num);
         setCorrectAnswer(toNativeKorean(num));
     }
-  }, [mode]);
+  }, [mode, specialSinoNumbers, toNativeKorean, toSinoKorean]);
 
   const normalizeAnswer = (answer) => {
     return answer.replace(/\s+/g, '').toLowerCase();
@@ -143,7 +143,7 @@ export default function NumbersQuizPage() {
 
   useEffect(() => {
     generateQuestion();
-  }, [mode, generateQuestion]);
+  }, [generateQuestion]);
 
   return (
     <>

@@ -29,15 +29,15 @@ const allQuestions = [
     { sentence: "제 이름___ 제니입니다.", blank: "은", options: ["은", "이", "을"] },
     { sentence: "커피___ 마셨어요.", blank: "를", options: ["는", "가", "를"] },
     { sentence: "이름___ 뭐예요?", blank: "이", options: ["은", "이", "을"] },
-    { sentence: "저___ 김치___ 좋아해요.", blank: "는/를", options: ["는/를", "가/을", "는/이"] },
-    { sentence: "친구___ 영화___ 봐요.", blank: "가/를", options: ["는/를", "가/를", "가/은"] },
-    { sentence: "학생___ 공부___ 해요.", blank: "은/를", options: ["은/를", "이/를", "은/이"] },
+    { sentence: "저___ 김치___ 좋아해요.", blank: "는 & 를", options: ["는 & 를", "가 & 을", "는 & 이"] },
+    { sentence: "친구___ 영화___ 봐요.", blank: "가 & 를", options: ["는 & 를", "가 & 를", "가 & 은"] },
+    { sentence: "학생___ 공부___ 해요.", blank: "은 & 를", options: ["은 & 를", "이 & 를", "은 & 이"] },
     { sentence: "음악___ 들어요.", blank: "을", options: ["은", "이", "을"] },
     { sentence: "비___ 와요.", blank: "가", options: ["는", "가", "를"] },
     { sentence: "꽃___ 예뻐요.", blank: "이", options: ["은", "이", "을"] },
-    { sentence: "오늘___ 날씨___ 좋아요.", blank: "은/가", options: ["은/가", "이/가", "은/는"] },
+    { sentence: "오늘___ 날씨___ 좋아요.", blank: "은 & 가", options: ["은 & 가", "이 & 가", "은 & 는"] },
     { sentence: "아이___ 울어요.", blank: "가", options: ["는", "가", "를"] },
-    { sentence: "선생님___ 학생들___ 가르쳐요.", blank: "은/을", options: ["은/을", "이/을", "은/이"] },
+    { sentence: "선생님___ 학생들___ 가르쳐요.", blank: "은 & 을", options: ["은 & 을", "이 & 을", "은 & 이"] },
 ];
 
 const shuffleArray = (array) => [...array].sort(() => Math.random() - 0.5);
