@@ -1,40 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Korean Learning Resources 🇰🇷
 
-## Getting Started
+A modern, interactive web application for learning Korean, built with Next.js and Tailwind CSS. This project provides a set of clean, fast, and responsive quizzes to help users practice core concepts of the Korean language.
 
-First, run the development server:
+**[➡️ View the Live Site](https://kr-resources.vercel.app)**
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
+## ✨ Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+* **Component-Based Architecture:** Built with React and Next.js for a modular, maintainable, and scalable codebase.
+* **Interactive Quizzes:**
+    * **Numbers Quiz:** Practice both Sino-Korean (일, 이, 삼...) and Native Korean (하나, 둘, 셋...) numbers.
+    * **Particle Quiz:** Master the usage of common particles like `은/는`, `이/가`, and `을/를`.
+* **Reliable TTS Audio:** Features a server-side API route that acts as a proxy to deliver high-quality Google TTS pronunciation for quiz answers.
+* **Modern Styling:** Styled with Tailwind CSS for a clean, responsive, and utility-first design.
+* **Optimized for Performance:** Fast page loads and seamless client-side navigation thanks to Next.js.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+---
+## 💻 Tech Stack
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+* **Framework:** [Next.js](https://nextjs.org/) (React)
+* **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+* **Deployment:** [Vercel](https://vercel.com/)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+---
+## 🚀 Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To build this project locally:
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+1.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+2.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
-## Deploy on Vercel
+---
+## 📜 License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+This project is open-source and distributed under the **[MIT Licence](https://github.com/brinsleym/kr-resources/blob/main/LICENSE)**.
