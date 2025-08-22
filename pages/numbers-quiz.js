@@ -1,13 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
+import Link from 'next/link';
 
 function QuizHeader({ title, subtitle }) {
     return (
         <header className="w-full max-w-3xl flex items-center gap-4 p-4 mb-8 border-b border-gray-200">
-            <a href="/" className="flex-shrink-0 py-2 px-4 bg-white border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-100 transition-colors shadow-sm">
+            <Link href="/" className="flex-shrink-0 py-2 px-4 bg-white border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-100 transition-colors shadow-sm">
                 ← Back
-            </a>
+            </Link>
             <div>
                 <h1 className="text-xl sm:text-2xl font-bold text-gray-900">{title}</h1>
                 <p className="text-sm sm:text-base text-gray-600">{subtitle}</p>
@@ -85,7 +86,7 @@ export default function NumbersQuizPage() {
     return result;
   }
 
-  const generateQuestion = () => {
+  const generateQuestion = useCallback(() => {
     setUserAnswer('');
     setFeedback(null);
     setIsRevealed(false);
@@ -112,7 +113,7 @@ export default function NumbersQuizPage() {
         setCurrentNumber(num);
         setCorrectAnswer(toNativeKorean(num));
     }
-  };
+  }, [mode]);
 
   const normalizeAnswer = (answer) => {
     return answer.replace(/\s+/g, '').toLowerCase();
@@ -142,7 +143,7 @@ export default function NumbersQuizPage() {
 
   useEffect(() => {
     generateQuestion();
-  }, [mode]);
+  }, [mode, generateQuestion]);
 
   return (
     <>
