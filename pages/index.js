@@ -1,76 +1,75 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { onAuthStateChanged, signInAnonymously } from "firebase/auth";
-import { collection, onSnapshot, doc, setDoc, addDoc, query, orderBy, updateDoc } from "firebase/firestore";
-import { auth, db } from '../lib/firebase';
-
 import ActivityHeatmap from '../components/ActivityHeatmap';
 import LessonTracker from '../components/LessonTracker';
 import Checklist from '../components/Checklist';
 
 export default function Home() {
-  const [userId, setUserId] = useState(null);
   const [dailyData, setDailyData] = useState({});
   const [lessons, setLessons] = useState([]);
 
-  const appId = process.env.NEXT_PUBLIC_FIREBASE_APP_ID || 'default-app-id';
-
   useEffect(() => {
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        setUserId(user.uid);
-      } else {
-        signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
+    // Fetch initial data from our API
+    const fetchData = async () => {
+      try {
+        const dailyDataRes = await fetch('/api/daily-data');
+        const lessonsRes = await fetch('/api/lessons');
+        const dailyDataJson = await dailyDataRes.json();
+        let lessonsJson = await lessonsRes.json();
+        // Defensive: ensure lessonsJson is always an array
+        if (!Array.isArray(lessonsJson)) lessonsJson = [];
+        setDailyData(dailyDataJson);
+        setLessons(lessonsJson);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+        setLessons([]); // fallback to empty array
       }
-    });
+    };
+    fetchData();
   }, []);
 
-  const getDailyDataCollectionPath = useCallback(() => `artifacts/${appId}/users/${userId}/korean_tracker_data`, [appId, userId]);
-  const getLessonsCollectionPath = useCallback(() => `artifacts/${appId}/users/${userId}/korean_tracker_lessons`, [appId, userId]);
-
-  useEffect(() => {
-    if (!userId) return;
-    const unsubscribeDailyData = onSnapshot(collection(db, getDailyDataCollectionPath()), (snapshot) => {
-      const data = {};
-      snapshot.forEach(doc => { data[doc.id] = doc.data(); });
-      setDailyData(data);
-    });
-
-    const unsubscribeLessons = onSnapshot(query(collection(db, getLessonsCollectionPath()), orderBy("date")), (snapshot) => {
-      const lessonData = [];
-      snapshot.forEach(doc => { lessonData.push({ id: doc.id, ...doc.data() }); });
-      setLessons(lessonData);
-    });
-
-    return () => {
-      unsubscribeDailyData();
-      unsubscribeLessons();
-    };
-  }, [userId, getDailyDataCollectionPath, getLessonsCollectionPath]);
-
   const handleChecklistItem = async (itemId, isChecked) => {
-    if (!userId) return;
     const getFormattedDate = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
     const todayKey = getFormattedDate(new Date());
-    const todayData = dailyData[todayKey] || { completed: [] };
-    let updatedCompleted = [...todayData.completed];
+    
+    const currentCompleted = dailyData[todayKey]?.completed || [];
+    let updatedCompleted = [...currentCompleted];
 
     if (isChecked) {
       if (!updatedCompleted.includes(itemId)) updatedCompleted.push(itemId);
     } else {
       updatedCompleted = updatedCompleted.filter(id => id !== itemId);
     }
-    await setDoc(doc(db, getDailyDataCollectionPath(), todayKey), { completed: updatedCompleted }, { merge: true });
+
+    // Optimistically update UI
+    setDailyData(prev => ({ ...prev, [todayKey]: { completed: updatedCompleted } }));
+
+    // Send update to API
+    await fetch(`/api/daily-data/${todayKey}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ completed: updatedCompleted }),
+    });
   };
 
   const handleAddLesson = async (date) => {
-    if (!userId) return;
-    await addDoc(collection(db, getLessonsCollectionPath()), { date: date.toISOString() });
+    const res = await fetch('/api/lessons', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date }),
+    });
+    const newLesson = await res.json();
+    setLessons(prev => [...prev, newLesson].sort((a, b) => new Date(a.date) - new Date(b.date)));
   };
 
   const handleUpdateLesson = async (id, date) => {
-    if (!userId) return;
-    await updateDoc(doc(db, getLessonsCollectionPath(), id), { date: date.toISOString() });
+    const res = await fetch(`/api/lessons/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ date }),
+    });
+    const updatedLesson = await res.json();
+    setLessons(prev => prev.map(l => l.id === id ? updatedLesson : l).sort((a, b) => new Date(a.date) - new Date(b.date)));
   };
 
   return (
@@ -85,7 +84,6 @@ export default function Home() {
           <h1 className="text-3xl sm:text-4xl font-bold text-slate-900">한국어 학습</h1>
           <p className="text-slate-500 mt-1 text-lg">Korean Language Progress Tracker</p>
         </header>
-
         <main className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10">
             <Checklist dailyData={dailyData} onCheckItem={handleChecklistItem} />

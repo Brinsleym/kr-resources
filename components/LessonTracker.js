@@ -8,8 +8,9 @@ export default function LessonTracker({ lessons, onAddLesson, onUpdateLesson }) 
 
   useEffect(() => {
     const now = new Date();
-    const pastLessons = lessons.filter(l => new Date(l.date) < now);
-    const futureLessons = lessons.filter(l => new Date(l.date) >= now);
+    const safeLessons = Array.isArray(lessons) ? lessons : [];
+    const pastLessons = safeLessons.filter(l => new Date(l.date) < now);
+    const futureLessons = safeLessons.filter(l => new Date(l.date) >= now);
     setCompletedCount(pastLessons.length);
     setNextLesson(futureLessons.length > 0 ? futureLessons[0] : null);
   }, [lessons]);
