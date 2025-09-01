@@ -146,7 +146,7 @@ export default function GrammarQuiz() {
                 onClick={() => startQuiz('connectors')}
                 className="w-full text-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-6 rounded-lg shadow-md transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
               >
-                Quiz 2: Connectors for "And"
+                Quiz 2: Connectors for &quot;And&quot;
               </button>
               <button 
                 onClick={() => startQuiz('titles')}

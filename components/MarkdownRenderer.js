@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import Head from 'next/head';
+import Image from 'next/image';
 import ClickableKoreanText from './ClickableKoreanText';
 
 export default function MarkdownRenderer({ content, title }) {
@@ -120,10 +121,10 @@ export default function MarkdownRenderer({ content, title }) {
             img: ({src, alt, title}) => {
               // Parse size from alt text if specified (e.g., "Description |300" or "Description |300x200")
               let displayAlt = alt;
-              let width = 'auto';
-              let height = 'auto';
-              let maxWidth = '100%';
+              let width = 400; // Default width for Next.js Image
+              let height = 300; // Default height for Next.js Image
               let className = 'my-4 rounded-lg shadow-md';
+              let sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw';
               
               if (alt && alt.includes('|')) {
                 const [description, sizeStr] = alt.split('|');
@@ -134,44 +135,49 @@ export default function MarkdownRenderer({ content, title }) {
                   if (size.includes('x')) {
                     // Format: "300x200"
                     const [w, h] = size.split('x');
-                    width = w ? `${w}px` : 'auto';
-                    height = h ? `${h}px` : 'auto';
+                    width = w ? parseInt(w) : 400;
+                    height = h ? parseInt(h) : 300;
                   } else if (size === 'full') {
                     // Format: "full" - full width
-                    width = '100%';
-                    maxWidth = '100%';
+                    width = 800;
+                    height = 600;
+                    sizes = '100vw';
                   } else if (size === 'small') {
                     // Format: "small" - 200px max width
-                    maxWidth = '200px';
+                    width = 200;
+                    height = 150;
                   } else if (size === 'medium') {
                     // Format: "medium" - 400px max width
-                    maxWidth = '400px';
+                    width = 400;
+                    height = 300;
                   } else if (size === 'large') {
                     // Format: "large" - 600px max width
-                    maxWidth = '600px';
+                    width = 600;
+                    height = 450;
                   } else {
                     // Format: "300" - just width
-                    width = `${size}px`;
+                    width = parseInt(size) || 400;
+                    height = Math.round(width * 0.75); // Maintain 4:3 aspect ratio
                   }
                 }
-              } else {
-                // Default size when no size specified
-                maxWidth = '400px'; // Default max width
               }
               
               return (
-                <img
-                  src={src}
-                  alt={displayAlt}
-                  title={title}
-                  className={className}
-                  style={{
-                    width,
-                    height,
-                    maxWidth,
-                    display: 'block'
-                  }}
-                />
+                <div className="my-4">
+                  <Image
+                    src={src}
+                    alt={displayAlt || ''}
+                    title={title}
+                    width={width}
+                    height={height}
+                    className={className}
+                    sizes={sizes}
+                    style={{
+                      maxWidth: '100%',
+                      height: 'auto',
+                    }}
+                  />
+                </div>
               );
             }
           }}
