@@ -116,7 +116,64 @@ export default function MarkdownRenderer({ content, title }) {
               <em className="italic text-gray-700">
                 <ClickableKoreanText>{children}</ClickableKoreanText>
               </em>
-            )
+            ),
+            img: ({src, alt, title}) => {
+              // Parse size from alt text if specified (e.g., "Description |300" or "Description |300x200")
+              let displayAlt = alt;
+              let width = 'auto';
+              let height = 'auto';
+              let maxWidth = '100%';
+              let className = 'my-4 rounded-lg shadow-md';
+              
+              if (alt && alt.includes('|')) {
+                const [description, sizeStr] = alt.split('|');
+                displayAlt = description.trim();
+                
+                if (sizeStr) {
+                  const size = sizeStr.trim();
+                  if (size.includes('x')) {
+                    // Format: "300x200"
+                    const [w, h] = size.split('x');
+                    width = w ? `${w}px` : 'auto';
+                    height = h ? `${h}px` : 'auto';
+                  } else if (size === 'full') {
+                    // Format: "full" - full width
+                    width = '100%';
+                    maxWidth = '100%';
+                  } else if (size === 'small') {
+                    // Format: "small" - 200px max width
+                    maxWidth = '200px';
+                  } else if (size === 'medium') {
+                    // Format: "medium" - 400px max width
+                    maxWidth = '400px';
+                  } else if (size === 'large') {
+                    // Format: "large" - 600px max width
+                    maxWidth = '600px';
+                  } else {
+                    // Format: "300" - just width
+                    width = `${size}px`;
+                  }
+                }
+              } else {
+                // Default size when no size specified
+                maxWidth = '400px'; // Default max width
+              }
+              
+              return (
+                <img
+                  src={src}
+                  alt={displayAlt}
+                  title={title}
+                  className={className}
+                  style={{
+                    width,
+                    height,
+                    maxWidth,
+                    display: 'block'
+                  }}
+                />
+              );
+            }
           }}
         >
           {content}

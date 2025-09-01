@@ -46,7 +46,7 @@ Indicates the object of a verb - the thing receiving the action.
 - 을: used with nouns ending with 받침
 - 를: used with nouns ending without 받침
 
-![image.png](image.png)
+![image.png |700](https://img.notionusercontent.com/s3/prod-files-secure%2F7626ae03-3157-4cd8-a15d-8844b70bcd03%2Fb7592fda-653d-446a-a96a-df0ca0f43d35%2Fimage.png/size/w=1420?exp=1756728771&sig=DqCt_3873Lu4XSkGoTzF3WWMwwmzFgbcbZ48nhqKSwo&id=257b9c18-61b3-8009-8d1c-fed36f31c98e&table=block&userId=f43df9af-0431-44c6-9dd1-f15cfb973a8c)
 
 ## Korean Sentence Endings
 

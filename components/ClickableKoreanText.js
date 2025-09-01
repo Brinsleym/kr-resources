@@ -56,7 +56,6 @@ export default function ClickableKoreanText({ children }) {
             ${isPlaying ? 'bg-blue-200 text-blue-900 animate-pulse' : ''}
             hover: hover:-translate-y-0.25
           `}
-          title={`Click to hear pronunciation: ${koreanSequence}`}
         >
           {koreanSequence}
         </span>
