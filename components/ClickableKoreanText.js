@@ -27,8 +27,9 @@ export default function ClickableKoreanText({ children }) {
   const processText = (text) => {
     if (typeof text !== 'string') return text;
     
-    // Match Korean text (including sentences with spaces between Korean words)
-    const koreanRegex = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF]+(?:\s+[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF]+)*/g;
+    // Match only Korean text (Hangul syllables, Jamo, and Korean punctuation)
+    // Excludes Chinese/Japanese characters
+    const koreanRegex = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF]+(?:\s+[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF]+)*/g;
     const parts = [];
     let lastIndex = 0;
     let match;
