@@ -1,8 +1,6 @@
 ---
-title: "🇰🇷 Beginner Korean Lesson Notes: Lesson 2"
+title: "🇰🇷 Beginner Korean Lesson Notes: Lesson 1"
 ---
-
-## Basic Korean Sentence Structure
 
 Korean follows the SOV (Subject-Object-Verb) word order pattern:
 

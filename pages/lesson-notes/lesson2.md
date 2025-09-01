@@ -1,8 +1,6 @@
 ---
-title: "🇰🇷 Beginner Korean Lesson Notes: Lesson 1"
+title: "🇰🇷 Beginner Korean Lesson Notes: Lesson 2"
 ---
-
-## Korean Lesson: Numbers (숫자) 🔢
 
 In Korean, there are two distinct number systems that are used in different situations:
 1.  **Native Korean Numbers** (고유어 수)
