@@ -1,7 +1,4 @@
-import { useState } from 'react';
-
-// Korean text detection regex - matches Hangul characters, Hanja, and Korean punctuation
-const KOREAN_REGEX = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF]+/g;
+import { useState, cloneElement, isValidElement } from 'react';
 
 export default function ClickableKoreanText({ children }) {
   const [playingText, setPlayingText] = useState(null);
@@ -30,38 +27,37 @@ export default function ClickableKoreanText({ children }) {
   const processText = (text) => {
     if (typeof text !== 'string') return text;
     
+    // Match Korean text (including sentences with spaces between Korean words)
+    const koreanRegex = /[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF]+(?:\s+[\u1100-\u11FF\u3130-\u318F\uAC00-\uD7AF\u4E00-\u9FFF]+)*/g;
     const parts = [];
     let lastIndex = 0;
     let match;
-
-    // Reset regex
-    KOREAN_REGEX.lastIndex = 0;
     
-    while ((match = KOREAN_REGEX.exec(text)) !== null) {
+    while ((match = koreanRegex.exec(text)) !== null) {
       // Add text before Korean match
       if (match.index > lastIndex) {
         parts.push(text.slice(lastIndex, match.index));
       }
       
-      // Add clickable Korean text
-      const koreanText = match[0];
-      const isPlaying = playingText === koreanText;
+      // Create clickable Korean span
+      const koreanSequence = match[0];
+      const isPlaying = playingText === koreanSequence;
       
       parts.push(
         <span
-          key={`${match.index}-${koreanText}`}
-          onClick={() => playAudio(koreanText)}
+          key={`${match.index}-${koreanSequence}`}
+          onClick={() => playAudio(koreanSequence)}
           className={`
             korean-text cursor-pointer inline-block
             hover:bg-blue-100 hover:text-blue-800 hover:shadow-sm
-            transition-all duration-200 ease-in-out
+            transition-all duration-100 ease-in-out
             rounded px-1 py-0.5 -mx-1 -my-0.5
             ${isPlaying ? 'bg-blue-200 text-blue-900 animate-pulse' : ''}
-            hover:scale-105 hover:-translate-y-0.5
+            hover: hover:-translate-y-0.25
           `}
-          title={`Click to hear pronunciation: ${koreanText}`}
+          title={`Click to hear pronunciation: ${koreanSequence}`}
         >
-          {koreanText}
+          {koreanSequence}
         </span>
       );
       
@@ -73,7 +69,7 @@ export default function ClickableKoreanText({ children }) {
       parts.push(text.slice(lastIndex));
     }
     
-    return parts.length > 1 ? parts : text;
+    return parts.length > 0 ? parts : text;
   };
 
   const processChildren = (children) => {
@@ -86,7 +82,23 @@ export default function ClickableKoreanText({ children }) {
         if (typeof child === 'string') {
           return processText(child);
         }
+        // Recursively process React elements using cloneElement
+        if (isValidElement(child)) {
+          return cloneElement(child, {
+            ...child.props,
+            children: processChildren(child.props.children),
+            key: child.key || index
+          });
+        }
         return child;
+      });
+    }
+    
+    // Handle single React element
+    if (isValidElement(children)) {
+      return cloneElement(children, {
+        ...children.props,
+        children: processChildren(children.props.children)
       });
     }
     
