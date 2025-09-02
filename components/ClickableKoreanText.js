@@ -1,25 +1,49 @@
-import { useState, cloneElement, isValidElement } from 'react';
+import { useState, cloneElement, isValidElement, useEffect } from 'react';
 
 export default function ClickableKoreanText({ children }) {
   const [playingText, setPlayingText] = useState(null);
+  const [currentAudio, setCurrentAudio] = useState(null);
+
+  // Cleanup audio on component unmount
+  useEffect(() => {
+    return () => {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+      }
+    };
+  }, [currentAudio]);
 
   const playAudio = async (text) => {
     if (!text || playingText === text) return;
     
     try {
+      // Stop any currently playing audio
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        setCurrentAudio(null);
+      }
+      
       setPlayingText(text);
       const audio = new Audio(`/api/tts?text=${encodeURIComponent(text.trim())}`);
       audio.volume = 0.8;
+      setCurrentAudio(audio);
       
-      audio.onended = () => setPlayingText(null);
+      audio.onended = () => {
+        setPlayingText(null);
+        setCurrentAudio(null);
+      };
       audio.onerror = () => {
         setPlayingText(null);
+        setCurrentAudio(null);
         console.error('Error playing audio for:', text);
       };
       
       await audio.play();
     } catch (error) {
       setPlayingText(null);
+      setCurrentAudio(null);
       console.error('Error playing audio:', error);
     }
   };
