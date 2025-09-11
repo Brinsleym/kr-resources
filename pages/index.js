@@ -11,7 +11,7 @@ export default function HomePage() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <Layout showFooter={true}>
-        <div className="w-full max-w-4xl mx-auto px-8 py-16 text-center flex-grow">
+        <div className="w-full max-w-6xl mx-auto px-8 py-16 text-center flex-grow">
           <header>
             <h1 className="text-5xl font-bold mb-2 text-black-800">
               Korean Learning Resources <span className="font-emoji">🇰🇷</span>
@@ -43,6 +43,19 @@ export default function HomePage() {
                 quizHref="/3-grammar-quiz"
                 notesHref="/lesson-notes/3"
                 lessonNumber={3}
+              />
+                            <LessonCard
+                icon="👈"
+                title="Lesson 4: Question Words Quiz"
+                description="Practice Korean question words like 뭐, 누구, 어디, and 얼마"
+                quizHref1="/4-demonstratives-quiz"
+                quizBtnDesc1="Demonstratives Quiz"
+                quizHref2="/4-questionwords-quiz"
+                quizBtnDesc2="Basic Question Words"
+                quizHref3="/4-vocabulary-quiz"
+                quizBtnDesc3="Vocabulary Quiz"
+                notesHref="/lesson-notes/4"
+                lessonNumber={4}
               />
             </div>
           </main>

@@ -1,8 +1,17 @@
-import { useState, cloneElement, isValidElement, useEffect } from 'react';
+import { useState, cloneElement, isValidElement, useEffect, createContext, useContext } from 'react';
+
+// Context to track if we're already inside a ClickableKoreanText component
+const ClickableKoreanTextContext = createContext(false);
 
 export default function ClickableKoreanText({ children }) {
   const [playingText, setPlayingText] = useState(null);
   const [currentAudio, setCurrentAudio] = useState(null);
+  const isNested = useContext(ClickableKoreanTextContext);
+
+  // If we're already inside another ClickableKoreanText, just return children without processing
+  if (isNested) {
+    return <>{children}</>;
+  }
 
   // Cleanup audio on component unmount
   useEffect(() => {
@@ -129,5 +138,9 @@ export default function ClickableKoreanText({ children }) {
     return children;
   };
 
-  return <>{processChildren(children)}</>;
+  return (
+    <ClickableKoreanTextContext.Provider value={true}>
+      {processChildren(children)}
+    </ClickableKoreanTextContext.Provider>
+  );
 }
