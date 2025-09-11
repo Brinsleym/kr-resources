@@ -21,7 +21,7 @@ export default function HomePage() {
           <main>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <LessonCard
-                icon="🔢"
+                icon="📖"
                 title="Lesson 1: Particles Quiz"
                 description="A simple quiz to practice the correct application of: 은/는, 이/가 and 을/를"
                 quizHref="/1-particle-quiz"
@@ -29,7 +29,7 @@ export default function HomePage() {
                 lessonNumber={1}
               />
               <LessonCard
-                icon="📖"
+                icon="🔢"
                 title="Lesson 2: Numbers Quiz"
                 description="Test your Sino & Native Korean numbers."
                 quizHref="/2-numbers-quiz"
